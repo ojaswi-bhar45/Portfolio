@@ -31,6 +31,25 @@ export default function Contact() {
             </div>
           ))}
         </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 32 }}>
+          <a href="/Resume.pdf" download="Ojaswi_Bhardwaj_Resume.pdf" className="btn-resume-contact" style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            width: '100%', maxWidth: 360, padding: '14px 32px',
+            borderRadius: 30, fontFamily: "'JetBrains Mono',monospace", fontSize: '0.82rem',
+            fontWeight: 500, cursor: 'pointer', textDecoration: 'none',
+            background: 'transparent', color: '#00ffa3',
+            border: '1px solid rgba(0,255,163,0.2)', transition: 'all 0.25s',
+          }}>
+            <span className="resume-arrow">↓</span> Download Resume
+          </a>
+          <a href="/Resume.pdf" target="_blank" rel="noreferrer" className="resume-view-link" style={{
+            fontFamily: "'JetBrains Mono',monospace", fontSize: '0.8125rem',
+            color: '#3d5166', textDecoration: 'none', transition: 'color 0.2s',
+            marginTop: 12,
+          }}>
+            View Resume ↗
+          </a>
+        </div>
       </div>
     </section>
   );

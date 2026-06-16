@@ -53,6 +53,15 @@ export default function Hero() {
             }}>
               View GitHub
             </a>
+            <a href="/Resume.pdf" download="Ojaswi_Bhardwaj_Resume.pdf" className="btn-resume-hero" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 32px',
+              borderRadius: 30, fontFamily: "'JetBrains Mono',monospace", fontSize: '0.82rem',
+              fontWeight: 500, cursor: 'pointer', textDecoration: 'none',
+              background: 'transparent', color: '#3d5166',
+              border: '1px solid #1e3048', transition: 'all 0.25s',
+            }}>
+              <span className="resume-arrow">↓</span> Download Resume
+            </a>
           </div>
           <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
             {[
