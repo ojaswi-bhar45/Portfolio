@@ -1,25 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export function useScrollSpy(sectionIds) {
-  const [activeSection, setActiveSection] = useState('hero');
-
+export default function useScrollSpy(ids) {
+  const [active, setActive] = useState('hero');
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      },
-      { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
+      (entries) => { entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }); },
+      { rootMargin: '-45% 0px -45% 0px' },
     );
-
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
+    ids.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
     return () => observer.disconnect();
-  }, [sectionIds]);
-
-  return activeSection;
+  }, [ids]);
+  return active;
 }
