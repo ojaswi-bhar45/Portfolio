@@ -33,7 +33,7 @@ export default function Experience() {
                     position: 'relative', color: 'rgba(255,255,255,0.65)', fontSize: '0.88rem',
                     marginBottom: 6, lineHeight: 1.6, paddingLeft: 0,
                   }}>
-                    <span style={{ color: '#00ffa3', marginRight: 8 }}>\u25B9</span>{b}
+                    <span style={{ color: '#00ffa3', marginRight: 8 }}>{'\u25B9'}</span>{b}
                   </li>
                 ))}
               </ul>

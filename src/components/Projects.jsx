@@ -33,10 +33,32 @@ export default function Projects() {
                     position: 'relative', color: 'rgba(255,255,255,0.6)', fontSize: '0.82rem',
                     marginBottom: 6, paddingLeft: 18, lineHeight: 1.6,
                   }}>
-                    <span style={{ position: 'absolute', left: 0, color: '#00ffa3' }}>\u2192</span>{b}
+                    <span style={{ position: 'absolute', left: 0, color: '#00ffa3' }}>{'\u2192'}</span>{b}
                   </li>
                 ))}
               </ul>
+              {p.liveUrl || p.githubUrl ? (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 14 }}>
+                  {p.liveUrl && (
+                    <a href={p.liveUrl} target="_blank" rel="noopener noreferrer" style={{
+                      fontFamily: "'JetBrains Mono',monospace", fontSize: '0.68rem',
+                      padding: '3px 10px', borderRadius: 6, cursor: 'pointer',
+                      background: 'rgba(0,255,163,0.06)', color: '#00ffa3',
+                      border: '1px solid rgba(0,255,163,0.1)', textDecoration: 'none',
+                      transition: 'all 0.2s',
+                    }}>→ Live Demo</a>
+                  )}
+                  {p.githubUrl && (
+                    <a href={p.githubUrl} target="_blank" rel="noopener noreferrer" style={{
+                      fontFamily: "'JetBrains Mono',monospace", fontSize: '0.68rem',
+                      padding: '3px 10px', borderRadius: 6, cursor: 'pointer',
+                      background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.7)',
+                      border: '1px solid rgba(255,255,255,0.1)', textDecoration: 'none',
+                      transition: 'all 0.2s',
+                    }}>GitHub →</a>
+                  )}
+                </div>
+              ) : null}
             </div>
           ))}
         </div>

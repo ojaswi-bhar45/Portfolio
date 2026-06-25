@@ -53,6 +53,7 @@ export const EXPERIENCE = [
 
 export const PROJECTS = [
   { name: 'Sync-Board', subtitle: 'Real-time collaborative workspace',
+    liveUrl: 'http://3.26.203.59/', githubUrl: 'https://github.com/ojaswi-bhar45/Sync-Board',
     stack: ['React.js', 'Node.js', 'Socket.io', 'MongoDB', 'Docker', 'GitHub Actions'],
     bullets: [
       'Real-time engine for 50+ concurrent users with sub-50ms latency via Socket.io; eliminated race conditions through event-driven state sync.',
@@ -60,6 +61,7 @@ export const PROJECTS = [
     ],
   },
   { name: 'Dev-Pulse', subtitle: 'DevOps CI/CD Monitoring Dashboard',
+    liveUrl: '', githubUrl: '',
     stack: ['React.js', 'JavaScript', 'Tailwind CSS', 'GitHub Actions', 'Docker', 'AWS ECS/ECR'],
     bullets: [
       'Built dashboard tracking 8+ CI/CD pipeline stages via GitHub Actions webhooks; reduced manual build-status checks by 70% for a 5-person team.',
@@ -67,6 +69,7 @@ export const PROJECTS = [
     ],
   },
   { name: 'Wanderlust', subtitle: 'Full Stack Accommodation Platform',
+    liveUrl: '', githubUrl: '',
     stack: ['Node.js', 'Express.js', 'MongoDB', 'Cloudinary', 'Mapbox', 'Render'],
     bullets: [
       'Shipped production-deployed platform with 50+ listings, Cloudinary CDN, Mapbox geo-search, and review system; achieved sub-200ms REST responses on Render.',
