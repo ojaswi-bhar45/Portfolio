@@ -3,7 +3,7 @@
 ## Overview
 
 Single-page developer portfolio built with **React 19** + **Vite 8**.  
-All components, hooks, and data are consolidated into one file (`src/App.jsx`) to keep the project minimal. No routing, no external UI libraries.
+Dark theme with green/teal accents, glassmorphism cards, and scroll-triggered animations. No routing, no external UI libraries, no CSS frameworks.
 
 ---
 
@@ -11,14 +11,42 @@ All components, hooks, and data are consolidated into one file (`src/App.jsx`) t
 
 ```
 portfolio/
-├── index.html            # Entry HTML (Google Fonts, root div)
-├── package.json          # React 19, Vite 8
-├── vite.config.js        # Vite config (auto-generated)
+├── index.html               # Entry HTML (Google Fonts, root div)
+├── package.json              # React 19, Vite 8
+├── vite.config.js            # Vite + React plugin
+├── eslint.config.js          # ESLint flat config
+├── Dockerfile                # Multi-stage: build → Nginx serve
+├── .dockerignore
+├── .gitignore
+├── public/
 ├── src/
-│   ├── main.jsx          # ReactDOM.createRoot → <App />
-│   ├── App.jsx           # Single file: data + hooks + all components
-│   └── App.css           # All styles (glassmorphism theme)
-└── ARCHITECTURE.md       # This file
+│   ├── main.jsx              # ReactDOM.createRoot → <App />
+│   ├── App.jsx               # Root component — assembles all sections
+│   ├── App.css               # All styles (dark theme, glassmorphism)
+│   ├── data/
+│   │   └── portfolio.js      # All content as exported constants
+│   ├── components/           # 15 components
+│   │   ├── ParticleCanvas.jsx
+│   │   ├── CursorGlow.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── Hero.jsx
+│   │   ├── Typewriter.jsx
+│   │   ├── Stats.jsx
+│   │   ├── AnimatedCounter.jsx
+│   │   ├── Skills.jsx
+│   │   ├── SkillBar.jsx
+│   │   ├── Experience.jsx
+│   │   ├── Projects.jsx
+│   │   ├── Education.jsx
+│   │   ├── Achievements.jsx
+│   │   ├── Contact.jsx
+│   │   └── Footer.jsx
+│   └── hooks/                # 3 custom hooks
+│       ├── useScrollReveal.js
+│       ├── useOnScreen.js
+│       └── useScrollSpy.js
+├── README.md
+└── ARCHITECTURE.md
 ```
 
 ---
@@ -29,44 +57,47 @@ portfolio/
 index.html
   └── <div id="root">
         └── main.jsx
-              └── <App />              ← src/App.jsx
-                    ├── <Navbar />      ← sticky, glass blur, hamburger
-                    ├── <Hero />        ← floating orbs, glow name, CTA
-                    ├── <Stats />       ← 4x animated counters
-                    ├── <Skills />      ← grouped pill badges
-                    ├── <Experience />  ← timeline with gradient line
-                    ├── <Projects />    ← 3 glass cards, per-card accent
-                    ├── <Education />   ← single glass card
-                    ├── <Achievements /> ← 4 icon+text glass cards
-                    ├── <Contact />     ← 4 glass contact cards
-                    └── <Footer />      ← copyright line
+              └── <App />
+                    ├── <ParticleCanvas />    ← fixed canvas background
+                    ├── <CursorGlow />        ← mouse-following radial gradient
+                    ├── <Navbar />            ← sticky, scroll spy, hamburger
+                    ├── <Hero />              ← orbital rings, Typewriter, CTA
+                    ├── <Stats />             ← 4x AnimatedCounter
+                    ├── <Skills />            ← grouped SkillBar categories
+                    ├── <Experience />        ← timeline with gradient line
+                    ├── <Projects />          ← 3 glass cards
+                    ├── <Education />         ← single glass card
+                    ├── <Achievements />      ← 4 icon+text glass cards
+                    ├── <Contact />           ← 4 contact cards + resume download
+                    └── <Footer />            ← copyright line
 ```
 
 ---
 
 ## Data Flow
 
-All content lives as plain JavaScript objects/arrays at the top of `App.jsx`:
+All content lives in `src/data/portfolio.js` as plain JavaScript exports:
 
 | Export | Type | Description |
 |--------|------|-------------|
-| `personal` | Object | Name, title, location, email, phone, links, summary |
-| `stats` | Array | 4 objects: `{ target, suffix, label }` |
-| `skillGroups` | Array | 6 groups: `{ label, skills[] }` |
-| `experience` | Array | 1 entry: `{ company, role, duration, location, bullets[] }` |
-| `projects` | Array | 3 entries: `{ name, subtitle, accent, stack[], bullets[] }` |
-| `education` | Object | `{ degree, university, duration, gpa }` |
-| `achievements` | Array | 4 entries: `{ icon, text (HTML string) }` |
+| `PERSONAL` | Object | Name, title, location, email, phone, links, summary |
+| `STATS` | Array | 4 objects: `{ target, suffix, label }` |
+| `SKILL_GROUPS` | Array | 6 groups: `{ label, skills[] }` each skill: `{ name, pct }` |
+| `EXPERIENCE` | Array | 1 entry: `{ company, role, duration, location, bullets[] }` |
+| `PROJECTS` | Array | 3 entries: `{ name, subtitle, liveUrl, githubUrl, stack[], bullets[] }` |
+| `EDUCATION` | Object | `{ degree, university, duration, gpa }` |
+| `ACHIEVEMENTS` | Array | 4 entries: `{ icon, text (HTML string) }` |
+| `TYPEWRITER_PHRASES` | Array | Strings cycled by Typewriter component |
 
-Components receive data directly from these constants — no prop drilling, no context, no state management.
+Components import data directly from `portfolio.js` — no prop drilling, no context, no state management.
 
 ---
 
-## Custom Hooks (defined inline in App.jsx)
+## Custom Hooks
 
-### `useScrollReveal()`
+### `useScrollReveal(delay = 0)`
 - **Purpose**: Triggers fade-in animation when a section enters the viewport
-- **Mechanism**: Creates an `IntersectionObserver` (threshold 0.1) on the returned ref
+- **Mechanism**: Creates an `IntersectionObserver` (threshold 0.08) on the returned ref
 - **Effect**: Adds CSS class `.visible` to the element, which triggers `opacity: 1` + `translateY(0)` transition
 - **Returns**: A `ref` to attach to the target DOM element
 
@@ -75,61 +106,107 @@ Components receive data directly from these constants — no prop drilling, no c
 - **Mechanism**: `IntersectionObserver` with `rootMargin: '-45% 0px -45% 0px'` (detects middle of viewport)
 - **Returns**: `activeSection` string (e.g. `"skills"`, `"projects"`)
 
+### `useOnScreen(threshold = 0.3)`
+- **Purpose**: Single-fire visibility detection (used by `SkillBar`)
+- **Mechanism**: `IntersectionObserver` — sets `visible = true` once, then disconnects
+- **Returns**: `[ref, visible]` tuple
+
 ---
 
 ## Component Breakdown
 
+### ParticleCanvas
+- Fixed `<canvas>` background (z-index 0, pointer-events none)
+- 90 particles moving at random velocities, bouncing off edges
+- Lines drawn between particles within 100px proximity
+- Green tint (`rgba(0,255,163,0.6)`)
+- Resizes with window
+
+### CursorGlow
+- Fixed 300px radial gradient div that follows the mouse
+- Uses `requestAnimationFrame` with linear interpolation (lerp 0.08) for smooth following
+- Green tint (`rgba(0,255,163,0.08)`)
+
 ### Navbar
-- Fixed position, glass blur background (`rgba(15,12,41,0.7)`, `backdrop-filter: blur(20px)`)
-- Logo with violet → pink gradient text
+- Fixed position, transparent → dark background on scroll (50px threshold)
+- Logo `<OB />` in monospace with green angle brackets
 - Nav links rendered from `SECTION_IDS` (all sections except `hero`)
-- Active link: violet background + glowing underline via `box-shadow`
-- Mobile (<768px): hamburger button toggles slide-in panel from right
+- Active link: green text + green background highlight via `useScrollSpy`
+- Mobile (<768px): hamburger button toggles slide-in panel from right (CSS class toggle)
 
 ### Hero
-- Full-viewport section with gradient background
-- **Floating orbs**: Two `div` elements with `border-radius: 50%`, `filter: blur(80px)`, and a `orbPulse` CSS animation (violet + pink)
-- **Name glow**: `hero-glow` div with radial gradient positioned behind the name
-- **Accent name**: Last name uses `background-clip: text` with violet → pink gradient
-- CTA buttons: "Get In Touch" (violet gradient) and "View GitHub" (glass outline)
+- Full-viewport section with top padding for navbar
+- **Orbital rings**: 3 concentric `<div>` rings (`ring--outer` 320px, `ring--mid` 260px, `ring--inner` 180px) with CSS spin animations; dot satellites at different positions
+- **Ring core**: Gradient radial circle with `glow-pulse` animation
+- **Name**: First name solid white, last name with green `-webkit-text-stroke` + shadow glow
+- **Typewriter**: Cycles through `TYPEWRITER_PHRASES` with typing/deleting animation
+- **Summary**: Two-line bio from `PERSONAL.summary`
+- **CTA buttons**: "Get In Touch" (solid green, scrolls to contact), "View GitHub" (outline, external link), "Download Resume" (dark outline, downloads `/Resume.pdf`)
+- **Links row**: GitHub, LinkedIn, Phone, Location (small monospace text)
+
+### Typewriter
+- Manages phrase cycling with `useRef` for index, position, direction
+- Types forward at 80ms/char, deletes at 40ms/char
+- 1500ms pause at end of phrase, 400ms pause before next phrase
+- Blinking cursor via CSS `tw-cursor` class
 
 ### Stats
+- Section label "Impact" + title "By the Numbers"
 - 4-column grid of `AnimatedCounter` components
-- Counters use `requestAnimationFrame` with cubic ease-out over 2000ms
+- Uses `useScrollReveal` for fade-in
+
+### AnimatedCounter
+- Receives `target`, `suffix`, `label` props
+- Counts from 0 to target over ~1.4s (50 steps × 28ms) with cubic ease-out
 - Triggered once via IntersectionObserver (threshold 0.5)
-- Counter text has violet → pink gradient
+- Counter text has green → cyan gradient via `background-clip: text`
 
 ### Skills
-- 6 category groups, each labeled with `// CategoryName` in monospace violet
-- Skills rendered as pill badges with glass background and violet border on hover
+- Section label "Expertise" + title "Skills & Technologies"
+- Responsive grid (`minmax(300px, 1fr)`)
+- Each group shows monospace label with `//` prefix in green
+- Skills rendered as `SkillBar` components
+
+### SkillBar
+- Receives `name`, `pct` props
+- Animated fill bar: width animates from 0% to `pct%` when scrolled into view (threshold 0.2)
+- Uses `useOnScreen` hook for trigger
+- Green → cyan gradient fill with green glow shadow
 
 ### Experience
+- Section label "Career" + title "Work Experience"
 - Vertical timeline with:
-  - Pink → violet gradient vertical line (`.timeline::before`)
-  - Glowing gradient dot per item (`.timeline-item::before`)
-  - Company, role, duration, location header
-  - Bullet list with `▹` prefix in violet
+  - Green → cyan gradient vertical line
+  - Glowing green dot per item
+  - Company (bold white), role (green), duration/location (dim monospace)
+  - Bullet list with `▹` prefix in green
 
 ### Projects
-- 3 glass cards in responsive grid (`repeat(auto-fill, minmax(340px, 1fr))`)
-- Each card has a unique accent color via CSS `--accent` variable:
-  - Sync-Board: violet (`#8b5cf6`)
-  - Dev-Pulse: pink (`#ec4899`)
-  - Wanderlust: cyan (`#06b6d4`)
-- Accent applied to: top border strip, stack tags, bullet arrows, hover glow
+- Section label "Portfolio" + title "Featured Projects"
+- Responsive grid (`minmax(320px, 1fr)`)
+- 3 glass cards: Sync-Board, Dev-Pulse, Wanderlust
+- Each card: name, subtitle, stack tags (green border), bullet list with `→` prefix
+- Conditional action buttons: "→ Live Demo" and "GitHub →" based on `liveUrl` / `githubUrl`
 
 ### Education
-- Single glass card with flex layout (degree/university, duration, GPA badge)
+- Section label "Education" + title "Academic Background"
+- Single glass card with flex layout
+- Degree + university (left), duration (right), GPA badge (green background)
 
 ### Achievements
-- Grid of 4 glass cards with icon + HTML text (uses `dangerouslySetInnerHTML` for `<strong>` tags)
+- Section label "Recognition" + title "Achievements"
+- Responsive grid (`minmax(280px, 1fr)`)
+- 4 glass cards with emoji icon + HTML text (uses `dangerouslySetInnerHTML` for `<strong>` tags)
 
 ### Contact
-- Grid of 4 glass cards: Email, Phone, LinkedIn, GitHub
-- Values are clickable links to `mailto:`, `tel:`, or external URLs
+- Section label "Connect" + title "Get in Touch"
+- Responsive grid of 4 glass cards: Email, Phone, LinkedIn, GitHub
+- Values are clickable links (`mailto:`, `tel:`, external URLs)
+- "Download Resume" button + "View Resume" text link below
 
 ### Footer
-- Simple centered text with "Built with React" in violet
+- Top border separator, centered text
+- "© 2026 Ojaswi Bhardwaj · Built with React"
 
 ---
 
@@ -137,24 +214,26 @@ Components receive data directly from these constants — no prop drilling, no c
 
 | Aspect | Implementation |
 |--------|---------------|
-| **CSS location** | Single `src/App.css` file, no CSS modules or CSS-in-JS |
-| **Theme** | CSS custom properties (`:root`) for all colors, fonts, glass params |
-| **Background** | `linear-gradient(135deg, #0f0c29, #302b63, #24243e)`, `fixed` |
-| **Glass cards** | `background: rgba(255,255,255,0.05)`, `backdrop-filter: blur(16px)`, `border: 1px solid rgba(255,255,255,0.12)`, `border-radius: 20px` |
-| **Responsive** | Two breakpoints: 768px (tablet stacking) and 480px (small mobile) |
-| **Animations** | CSS transitions for hover effects, `@keyframes orbPulse` for floating orbs |
-| **Scroll reveal** | CSS class toggle via IntersectionObserver |
+| **CSS location** | Single `src/App.css`, no CSS modules or CSS-in-JS |
+| **Theme** | Dark background `#0a0e1a`, green accent `#00ffa3`, cyan accent `#00c8ff` |
+| **Background** | Solid `#0a0e1a` (particle canvas adds visual interest) |
+| **Glass cards** | `background: rgba(255,255,255,0.03)`, `border: 1px solid rgba(0,255,163,0.08)`, `backdrop-filter: blur(8px)`, `border-radius: 16px` |
+| **Responsive** | Two breakpoints: 768px (tablet stacking, hamburger nav) and 480px (small mobile) |
+| **Animations** | CSS transitions for hover effects, `@keyframes spin-cw/spin-ccw` for orbital rings, `@keyframes glow-pulse` for ring core, CSS transitions for scroll-reveal |
+| **Scroll reveal** | `IntersectionObserver` toggles `.visible` class → `opacity: 1` + `translateY(0)` |
 
 ### Color Palette
 
 ```
---violet: #8b5cf6      (primary accent)
---pink:   #ec4899      (secondary accent)
---cyan:   #06b6d4      (tertiary accent, used in Wanderlust project)
---text:   rgba(255,255,255,0.7)
---heading: #ffffff
---glass-bg: rgba(255,255,255,0.05)
---glass-border: rgba(255,255,255,0.12)
+--bg:           #0a0e1a      (page background)
+--green:        #00ffa3      (primary accent)
+--cyan:         #00c8ff      (secondary accent)
+--text:         rgba(255,255,255,0.7)
+--text-dim:     rgba(255,255,255,0.35)
+--heading:      #ffffff
+--glass-bg:     rgba(255,255,255,0.03)
+--glass-border: rgba(0,255,163,0.08)
+--selection:    rgba(0,255,163,0.25)
 ```
 
 ### Typography
@@ -170,24 +249,45 @@ Components receive data directly from these constants — no prop drilling, no c
 ## Build & Run
 
 ```bash
-npm install        # Install dependencies
-npm run dev        # Dev server (Vite)
-npm run build      # Production build → dist/
-npm run preview    # Preview production build
+npm install              # Install dependencies
+npm run dev              # Dev server (Vite HMR)
+npm run build            # Production build → dist/
+npm run preview          # Preview production build
+npm run lint             # ESLint check
+
+docker build -t portfolio .                # Docker image
+docker run -d -p 80:80 portfolio           # Docker container
 ```
 
 Production build output:
-- `dist/index.html` (0.7 KB)
-- `dist/assets/index-*.css` (11.6 KB gzip: 3 KB)
-- `dist/assets/index-*.js` (203 KB gzip: 64 KB)
+- `dist/index.html` (~0.7 KB)
+- `dist/assets/index-*.css` (~11.6 KB)
+- `dist/assets/index-*.js` (~203 KB)
 
 ---
 
 ## Key Design Decisions
 
-1. **Single JSX file**: All data, hooks, and components in `App.jsx` to minimize file count and simplify navigation
+1. **Separated file structure**: Data, hooks, and components each in their own directory (unlike earlier monolithic `App.jsx` approach)
 2. **No external CSS framework**: All styles hand-written for full control over the glassmorphism aesthetic
-3. **IntersectionObserver (not scroll events)**: For both scroll reveal and scroll spy — better performance, no throttling needed
-4. **requestAnimationFrame for counters**: Smooth 60fps animation with cubic ease-out, runs once per session
-5. **CSS custom properties for per-card accents**: Project cards receive `--accent` via inline `style` prop, consumed by child selectors
-6. **No routing**: Single-page design, smooth-scroll anchor navigation only
+3. **IntersectionObserver (not scroll events)**: For scroll reveal, scroll spy, and animation triggers — better performance, no throttling needed
+4. **requestAnimationFrame for cursor glow**: Smooth 60fps linear interpolation
+5. **requestAnimationFrame for particle canvas**: Efficient 60fps particle simulation
+6. **CSS transitions for animated elements**: Skill bars, scroll reveal, hover effects — all use CSS transitions
+7. **No routing**: Single-page design, smooth-scroll anchor navigation only
+8. **Canvas background**: Particles render on a `<canvas>` element to avoid DOM overhead
+
+---
+
+## Comparison: Current vs Original Architecture
+
+| Aspect | Original (ARCHITECTURE.md v1) | Current |
+|--------|-------------------------------|---------|
+| File structure | Monolithic `App.jsx` | Separate `components/`, `hooks/`, `data/` |
+| Background | `linear-gradient(135deg, #0f0c29, #302b63, #24243e)` | Solid `#0a0e1a` + particle canvas |
+| Primary accent | Violet `#8b5cf6` | Green `#00ffa3` |
+| Secondary accent | Pink `#ec4899` | Cyan `#00c8ff` |
+| Hooks | 2 (`useScrollReveal`, `useScrollSpy`) | 3 (+ `useOnScreen`) |
+| Components | 10 | 15 (+ `ParticleCanvas`, `CursorGlow`, `Typewriter`, `SkillBar`, `AnimatedCounter`) |
+| Data | Inline in `App.jsx` | `src/data/portfolio.js` |
+| Deployment | Static build only | Docker multi-stage build |
