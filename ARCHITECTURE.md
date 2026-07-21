@@ -1,5 +1,7 @@
 # Architecture — Ojaswi Bhardwaj Portfolio
 
+> **Live Demo:** [YOUR_LIVE_DEMO_URL](YOUR_LIVE_DEMO_URL)
+
 ## Overview
 
 Single-page developer portfolio built with **React 19** + **Vite 8**.  
