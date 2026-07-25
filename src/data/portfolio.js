@@ -24,7 +24,7 @@ export const SKILL_GROUPS = [
     { name: 'WebSockets', pct: 75 }, { name: 'JWT', pct: 82 }, { name: 'RBAC', pct: 80 }, { name: 'OOP', pct: 85 },
   ]},
   { label: 'Database & Cloud', skills: [
-    { name: 'MongoDB', pct: 82 }, { name: 'MySQL', pct: 78 }, { name: 'AWS EC2/S3', pct: 72 },
+    { name: 'MongoDB', pct: 82 }, { name: 'MySQL', pct: 78 }, { name: 'PostgreSQL', pct: 75 }, { name: 'AWS EC2/S3', pct: 72 },
     { name: 'Firebase', pct: 80 }, { name: 'Cloudinary', pct: 75 },
   ]},
   { label: 'Languages', skills: [
@@ -53,6 +53,7 @@ export const EXPERIENCE = [
 
 export const PROJECTS = [
   { name: 'Sync-Board', subtitle: 'Real-time collaborative workspace',
+    icon: '\u26A1',
     liveUrl: 'http://3.26.203.59/', githubUrl: 'https://github.com/ojaswi-bhar45/Sync-Board',
     stack: ['React.js', 'Node.js', 'Socket.io', 'MongoDB', 'Docker', 'GitHub Actions'],
     bullets: [
@@ -61,7 +62,8 @@ export const PROJECTS = [
     ],
   },
   { name: 'Dev-Pulse', subtitle: 'DevOps CI/CD Monitoring Dashboard',
-    liveUrl: '', githubUrl: '',
+    icon: '\uD83D\uDCCA',
+    liveUrl: '', githubUrl: 'https://github.com/ojaswi-bhar45/DevPulse',
     stack: ['React.js', 'JavaScript', 'Tailwind CSS', 'GitHub Actions', 'Docker', 'AWS ECS/ECR'],
     bullets: [
       'Built dashboard tracking 8+ CI/CD pipeline stages via GitHub Actions webhooks; reduced manual build-status checks by 70% for a 5-person team.',
@@ -69,11 +71,21 @@ export const PROJECTS = [
     ],
   },
   { name: 'Wanderlust', subtitle: 'Full Stack Accommodation Platform',
-    liveUrl: '', githubUrl: '',
+    icon: '\uD83C\uDFD8\uFE0F',
+    liveUrl: '', githubUrl: 'https://github.com/ojaswi-bhar45/WanderLust',
     stack: ['Node.js', 'Express.js', 'MongoDB', 'Cloudinary', 'Mapbox', 'Render'],
     bullets: [
       'Shipped production-deployed platform with 50+ listings, Cloudinary CDN, Mapbox geo-search, and review system; achieved sub-200ms REST responses on Render.',
       'Designed indexed MongoDB schemas and session-based JWT auth with server-side validation, reducing invalid form submissions by 35%.',
+    ],
+  },
+  { name: 'URL-Shorten', subtitle: 'Backend URL Shortening Service',
+    icon: '\uD83D\uDD17',
+    liveUrl: '', githubUrl: 'https://github.com/ojaswi-bhar45/URL-Shorten',
+    stack: ['Node.js', 'Express.js', 'PostgreSQL'],
+    bullets: [
+      'Built a RESTful URL shortening API with Express.js; generates short codes, handles redirects, and tracks click analytics with sub-100ms response times.',
+      'Designed normalized PostgreSQL schemas with indexed lookup tables for efficient URL resolution and scalable click tracking.',
     ],
   },
 ];
