@@ -102,3 +102,26 @@ export const ACHIEVEMENTS = [
 ];
 
 export const TYPEWRITER_PHRASES = ['Full-Stack Developer', 'Open Source Enthusiast', 'UI/UX Thinker', 'Problem Solver'];
+
+export const BLOG = [
+  {
+    title: 'Building a Real-Time Collaborative Editor with Socket.io',
+    excerpt: 'A deep dive into the architecture behind Sync-Board — handling concurrent edits, conflict resolution, and maintaining sub-50ms latency for 50+ simultaneous users.',
+    date: 'May 2026', tags: ['React', 'Socket.io', 'Node.js'], url: '#',
+  },
+  {
+    title: 'Dockerizing Your React App: From Dev to Production',
+    excerpt: 'A step-by-step guide to multi-stage Docker builds for React applications, covering Nginx configuration, environment variables, and CI/CD integration.',
+    date: 'Apr 2026', tags: ['Docker', 'DevOps', 'React'], url: '#',
+  },
+  {
+    title: 'Designing a Role-Based Access Control System',
+    excerpt: 'Lessons learned from building a 3-tier RBAC system — middleware architecture, route protection patterns, and balancing security with developer experience.',
+    date: 'Mar 2026', tags: ['Node.js', 'Security', 'Architecture'], url: '#',
+  },
+  {
+    title: 'Optimizing MongoDB Query Performance',
+    excerpt: 'Practical strategies for indexing, aggregation pipeline optimization, and query profiling that reduced API response times by 35% in production.',
+    date: 'Feb 2026', tags: ['MongoDB', 'Performance', 'Backend'], url: '#',
+  },
+];

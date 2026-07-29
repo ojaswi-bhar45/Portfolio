@@ -1,32 +1,38 @@
+import { useState } from 'react';
 import './App.css';
-import ParticleCanvas from './components/ParticleCanvas';
-import CursorGlow from './components/CursorGlow';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Stats from './components/Stats';
-import Skills from './components/Skills';
-import Experience from './components/Experience';
-import Projects from './components/Projects';
-import Education from './components/Education';
-import Achievements from './components/Achievements';
-import Contact from './components/Contact';
+import { ThemeProvider } from './context/ThemeContext';
+import Layout from './components/Layout';
+import Sidebar from './components/Sidebar';
+import ProfileCard from './components/ProfileCard';
+import AboutSection from './components/AboutSection';
+import ResumeSection from './components/ResumeSection';
+import PortfolioSection from './components/PortfolioSection';
+import BlogSection from './components/BlogSection';
+import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
+
+function AppContent() {
+  const [active, setActive] = useState('about');
+
+  return (
+    <Layout
+      sidebar={<Sidebar active={active} onNav={setActive} />}
+      profileCard={<ProfileCard />}
+    >
+      {active === 'about' && <AboutSection />}
+      {active === 'resume' && <ResumeSection />}
+      {active === 'portfolio' && <PortfolioSection />}
+      {active === 'blog' && <BlogSection />}
+      {active === 'contact' && <ContactSection />}
+      <Footer />
+    </Layout>
+  );
+}
 
 export default function App() {
   return (
-    <>
-      <ParticleCanvas />
-      <CursorGlow />
-      <Navbar />
-      <Hero />
-      <Stats />
-      <Skills />
-      <Experience />
-      <Projects />
-      <Education />
-      <Achievements />
-      <Contact />
-      <Footer />
-    </>
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
