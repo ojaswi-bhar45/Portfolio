@@ -4,8 +4,8 @@ import ThemeToggle from './ThemeToggle';
 
 const NAV_ITEMS = [
   { id: 'about', label: 'About', Icon: AboutIcon },
-  { id: 'resume', label: 'Resume', Icon: ResumeIcon },
-  { id: 'portfolio', label: 'Portfolio', Icon: PortfolioIcon },
+  { id: 'resume', label: 'Experience', Icon: ResumeIcon },
+  { id: 'portfolio', label: 'Projects', Icon: PortfolioIcon },
   { id: 'blog', label: 'Blog', Icon: BlogIcon },
   { id: 'contact', label: 'Contact', Icon: ContactIcon },
 ];

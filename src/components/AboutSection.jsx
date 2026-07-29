@@ -22,7 +22,7 @@ const DEVOPS_CORE = [
 
 export default function AboutSection() {
   const [openTiles, setOpenTiles] = useState([false, false, false]);
-  const toggleTile = (i) => setOpenTiles(p => { const n = [...p]; n[i] = !n[i]; return n; });
+  const toggleTile = (i) => setOpenTiles(p => p.map((v, idx) => idx === i ? !v : false));
 
   const headline = `${PERSONAL.title} building digital experiences that make a difference`;
   const half = Math.ceil(PERSONAL.summary.length / 2);
@@ -38,6 +38,14 @@ export default function AboutSection() {
         <SkillTile icon={'\u26A1'} label={'Languages & Frontend'} skills={LANG_FRONTEND} isOpen={openTiles[0]} onToggle={() => toggleTile(0)} />
         <SkillTile icon={'\uD83D\uDCC4'} label={'Backend & Database'} skills={BACKEND_DB} isOpen={openTiles[1]} onToggle={() => toggleTile(1)} />
         <SkillTile icon={'\u2601\uFE0F'} label={'DevOps & Core CS'} skills={DEVOPS_CORE} isOpen={openTiles[2]} onToggle={() => toggleTile(2)} />
+      </div>
+      <div style={{ marginTop: '32px', display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <a href="/Resume.pdf" download className="btn-submit" style={{ textDecoration: 'none' }}>
+          Download Resume {'\u2193'}
+        </a>
+        <a href="/Resume.pdf" target="_blank" rel="noopener noreferrer" className="btn-submit" style={{ textDecoration: 'none', background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)' }}>
+          View Resume {'\u2192'}
+        </a>
       </div>
     </section>
   );
